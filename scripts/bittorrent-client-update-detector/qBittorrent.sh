@@ -7,7 +7,6 @@ qBittorrentTempFolder="./tempSource/qBittorrent"
 rm -rf $qBittorrentTempFolder
 mkdir -p $qBittorrentTempFolder
 
-
 if [ -z ${1+x} ]; then
   # Download latest release
   tarballUrl=$(curl -s https://api.github.com/repos/qbittorrent/qBittorrent/tags \
@@ -50,7 +49,6 @@ non_expanded_user_agent=$(grep "USER_AGENT\[\] =" $qBittorrentTempFolder/src/bas
 user_agent=$(eval echo "$non_expanded_user_agent")
 echo "User-Agent is: $user_agent"
 
-
 # extract beginning of peer_id
 bt_peer_id_small_name=$(grep "PEER_ID\[\] =" $qBittorrentTempFolder/src/base/bittorrent/session.cpp | cut -d '=' -f 2 | tr -d '[:space:]' | tr -d '[";]')
 
@@ -64,6 +62,10 @@ echo "Peer_id prefix is: $peer_id_prefix"
 
 echo "key : qBittorent is using libtorrent => $(libtorrent_get_key_format)"
 
+# Make Client File
+BlankFile="./blankclients/qbittorrent-0.0.0.client"
+NewClient="../../resources/clients/qbittorrent-$QBT_VERSION_2.client"
+cp $BlankFile $NewClient && sed -i "s/-qB0000-/$peer_id_prefix/;s/0.0.0/$QBT_VERSION_2/" $NewClient
 
 # clean tempSource folder
 rm -rf $qBittorrentTempFolder
